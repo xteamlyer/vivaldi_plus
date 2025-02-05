@@ -1,13 +1,11 @@
 name: Update Submodules
 
 on:
-  schedule:
-    # 每6小时执行一次
-    - cron:  '0 */6 * * *'
-  push:
-    # 当main分支有新的推送时执行
-    branches:
-      - main
+  # schedule:
+  #   # 每6小时执行一次
+  #   - cron:  '0 */6 * * *'
+  # push:
+  workflow_dispatch:
 
 jobs:
   update:
@@ -19,7 +17,7 @@ jobs:
         with:
           # 确保拉取所有子模块
           submodules: 'recursive'
-          
+
       - name: setup-gh
         # You may pin to the exact commit or the version.
         # uses: wusatosi/setup-gh@7dae6c8246092454793fe35dd4d5a9e8bf8ed34d
@@ -33,12 +31,12 @@ jobs:
       - name: Init Submodules
         run: |
           git submodule init
-          
+
       - name: Update Submodules
         run: |
           echo "Update submodule"
           git submodule update --remote --recursive
-      
+
           echo "Check if submodule is changed or not"
           # Track submodule changes
           git status
@@ -46,10 +44,10 @@ jobs:
 
           git config --global user.email "czyt.go@gmail.com"
           git config --global user.name "czyt"
-          
+
           # First, add any submodule changes.
           git add . || true # The '|| true' ensures that even if this command fails, the script will continue.
-      
+
           # Now, check if there are changes to commit. We use git diff-index HEAD -- here to check for changes as compared to the last commit.
           if git diff-index --quiet HEAD --; then
             # If there are no changes then the --quiet flag will make sure the command exits with 0 and this block will be executed.
